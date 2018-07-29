@@ -20,8 +20,11 @@ class lhTextConv {
         'э' => 'e', 'ю' => 'ju', 'я' => 'ja' 
     ];
 
-    private static $smiles_map = [
-        ':wink:' => '😉'
+    private static $smiles_map = [ // TODO - вписать коды всех смайлов в этот массив
+        ':smile:' =>  0x1F604,
+        ':smiley:' =>  0x1F603,
+        ':wink:' => 0x1F609,
+        ':flushed:' => 0x1F633,
     ];
 
     public static function metaphone($text) {
@@ -90,7 +93,7 @@ class lhTextConv {
     public static function smilesSubstitutions($template) {
         $result = $template;
         foreach (self::$smiles_map as $key => $value) {
-            $result = preg_replace("/$key/", $value, $result);
+            $result = preg_replace("/$key/", html_entity_decode('&#' . $value . ';',ENT_NOQUOTES,'UTF-8'), $result);
         }
         return $result;
     }
