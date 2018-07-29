@@ -15,6 +15,11 @@ $metaphone = ['ВИТАФСКИЙ', 'ВИТАФСКИЙ', 'ШВАРЦИНИГИ�
 $translit = ['Vitavskij', 'Vitovskij', 'Shvardsenegger', 'SHVORTSINEGIR', 'Vitenberg', 'Vittenberg', 'Nasanov', 'Nasonov', 'Nassonov', 'Nosonov', 'Permakov', 'Permjakov', 'Permjakov', 'Borsch', 'PALETS', 'PLASCH', 'SCHUP'];
 $similarity = [ false, true, false, true, false, true, false, true, true, true, false, true, true, false, false, false, false ];
 
+$gender = [
+    'Я пош[ел|ла] гулять т.к. был[а] пьян[а]' => [ 'Я пошел гулять т.к. был пьян', 'Я пошла гулять т.к. была пьяна'],
+    'Он[а] был[а] дура[к|]' => [ 'Он был дурак', 'Она была дура' ]
+];
+
 $test_metaphone = array_combine($keys, $metaphone);
 
 echo "Проверка метафона";
@@ -51,6 +56,24 @@ foreach ($test_similarity as $key => $value) {
         die();
     }
     $last = $key;
+    echo '.';
+}
+echo "Ok\n";
+
+echo "Проверка изменения пола";
+foreach ($gender as $key => $value) {
+    $f = lhTextConv::genderSubstitutions($key, 'f');
+    $m = lhTextConv::genderSubstitutions($key, 'm');
+    
+    if ($value[0] != $m) {
+        echo "FAIL!!! - Получено: \"$m\", ожидалось: \"$value[0]\"";
+        die();
+    }
+    echo '.';
+    if ($value[1] != $f) {
+        echo "FAIL!!! - Получено: \"$f\", ожидалось: \"$value[1]\"";
+        die();
+    }
     echo '.';
 }
 echo "Ok\n";
