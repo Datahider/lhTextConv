@@ -26,6 +26,7 @@ class lhTextConv {
 
     public static function metaphone($text) {
         $result = mb_strtolower($text, 'UTF-8');
+        $result = self::removeUnreadable($result);
         $result = self::shrinkDuplicates($result);
         $result = self::replaceVovels($result);
         $result = self::replaceConsonants($result);
@@ -113,6 +114,12 @@ class lhTextConv {
         $result = preg_replace("/з(?=([бвгджзкпстфхцчшщь]|\b))/u", 'с', $result);
         $result = preg_replace("/тс|дс/u", 'ц', $result);
         $result = preg_replace("/чта/u", 'шта', $result);
+        return $result;
+    }
+    
+    private static function removeUnreadable($text) {
+        $result = $text;
+        $result = preg_replace("/[ьЬъЪ-]/u", '', $result);
         return $result;
     }
 }
