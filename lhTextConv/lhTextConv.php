@@ -64,12 +64,7 @@ class lhTextConv {
     }
     
     public static function metaphoneSimilarity($text1, $text2) {
-        similar_text(
-            self::translit(self::metaphone($text1)), 
-            self::translit(self::metaphone($text2)), 
-            $percentage
-        );
-        return $percentage;
+        return self::similarity(self::metaphone($text1), self::metaphone($text2));
     }
     
     public static function similarity($text1, $text2) {
@@ -79,13 +74,6 @@ class lhTextConv {
             $percentage
         );
         return $percentage;
-    }
-    
-    public static function levenshtein($text1, $text2) {
-        return levenshtein(
-            self::translit(self::metaphone($text1)), 
-            self::translit(self::metaphone($text2))
-        );
     }
     
     public static function genderSubstitutions($string, $gender='m') {
