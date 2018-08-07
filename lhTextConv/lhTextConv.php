@@ -25,6 +25,9 @@ class lhTextConv {
         ':smiley:' =>  0x1F603,
         ':wink:' => 0x1F609,
         ':flushed:' => 0x1F633,
+        ':+1:' => 0x1F44D,
+        ':-1:' => 0x1F44E,
+        
     ];
 
     public static function metaphone($text) {
