@@ -27,7 +27,7 @@ class lhTextConv {
         ':flushed:' => 0x1F633,
         ':\+1:' => 0x1F44D,
         ':\-1:' => 0x1F44E,
-        
+        ':think:' => 0x1F914,
     ];
 
     public static function metaphone($text) {
