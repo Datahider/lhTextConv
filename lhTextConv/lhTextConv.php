@@ -28,6 +28,8 @@ class lhTextConv {
         ':\+1:' => 0x1F44D,
         ':\-1:' => 0x1F44E,
         ':think:' => 0x1F914,
+        ':kiss:' => 0x1F618,
+        ':hug:' => 0x1F917
     ];
 
     public static function metaphone($text) {
