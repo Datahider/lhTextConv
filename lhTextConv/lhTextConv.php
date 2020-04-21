@@ -102,7 +102,14 @@ class lhTextConv {
         if (preg_match_all("/([.!?]+|[-:]|[,;]|[а-яА-Я]+|\d+|[a-zA-Z]+|\S+)/u", $string, $matches) !== false) {
             return $matches[0];
         }
-        return false;
+        return null;
+    }
+
+    public static function splitSentences($text) {
+        if (preg_match_all("/\S.*?([.!?]+|$)/m", $text, $matches)) {
+            return $matches[0];
+        }
+        return null;
     }
 
     // Возвращает индекс элемента, наиболее похожего на $text

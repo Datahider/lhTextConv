@@ -154,3 +154,31 @@ foreach ($splits as $test_set) {
     }
 }
 echo "Ok\n";
+
+echo "Проверка splitSentences";
+
+$split_sentences = [
+    ["Привет. Как дела ?!  Пошли гулять!", ["Привет.", "Как дела ?!", "Пошли гулять!"]],
+    ["Ты где?  а?", ["Ты где?", "а?"]],
+    ["Добрый день, как дела?! Я приеду в 3 в Star Trek. Пьянство - зло;\nПривет!неработает удаленка",[
+        "Добрый день, как дела?!",
+        "Я приеду в 3 в Star Trek.",
+        "Пьянство - зло;",
+        "Привет!",
+        "неработает удаленка",
+    ]]
+];
+foreach ($split_sentences as $test_set) {
+    echo '.';
+    $r = lhTextConv::splitSentences($test_set[0]);
+    if ((count($test_set[1]) == 0) && (count($r) != 0)) {
+        throw new Exception("Awaiting result to be empty but got: ". print_r($r, true));
+    }
+    for ($index = 0; $index < count($test_set[1]); $index++) {
+        if ($test_set[1][$index] != $r[$index]) {
+            throw new Exception("Awaiting lexemme $index to be ". $test_set[1][$index]. " but got: ". print_r($r[$index], true));
+        }
+    }
+}
+echo "Ok\n";
+
