@@ -15,6 +15,19 @@ $metaphone = ['ВИТАФСКИЙ', 'ВИТАФСКИЙ', 'ШВАРЦИНИГИ�
 $translit = ['Vitavskij', 'Vitovskij', 'Shvardsenegger', 'SHVORTSINEGIR', 'Vitenberg', 'Vittenberg', 'Nasanov', 'Nasonov', 'Nassonov', 'Nosonov', 'Permakov', 'Permjakov', 'Permjakov', 'Borsch', 'PALETS', 'PLASCH', 'SCHUP'];
 $similarity = [ false, true, false, true, false, true, false, true, true, true, false, true, true, false, false, false, false ];
 $smiles = [ 'Привет :wink:!' => 'Привет 😉!', "Я :flushed: шизею" => 'Я 😳 шизею' ];
+$best_match = [
+    [["Петя"], "Петя", 0, 100],
+    [["Пупа", "Петя", "Пепа"], "Петя", 1, 100],
+    [["Преве", "Превед", "Превед "], "Привет", 1, 100],
+    [["Похожест", "Похожесть", "Похожесть "], "Пахожесть", 0, 100],
+    [["Доброго", "Доброго времени", "Доброго времени суток"], "Доброго времени дня", 1, 88.235294117647],
+    [["Не", "Нет"], "Ни", 0, 100]
+];
+$commutatives = [
+    ["Петя", "Пепа"],
+    ["Тузя", "Маргарита"],
+    ["Маргарита", "Маргоша"]
+];
 
 $gender = [
     'Я пош[ел|ла] гулять т.к. был[а] пьян[а]' => [ 'Я пошел гулять т.к. был пьян', 'Я пошла гулять т.к. была пьяна'],
@@ -89,5 +102,53 @@ foreach ($smiles as $key => $value) {
         die();
     }
     echo '.';
+}
+echo "Ok\n";
+
+echo "Проверка коммутативности";
+foreach ($commutatives as $test_set) {
+    echo '.';
+    $r1 = lhTextConv::metaphoneSimilarity($test_set[0], $test_set[1]);
+    $r2 = lhTextConv::metaphoneSimilarity($test_set[1], $test_set[0]);
+    if ($r1 != $r2) {
+        throw new Exception("$r1 != $r2");
+    }
+}
+echo "Ok\n";
+
+echo "Проверка bestMatch";
+foreach ($best_match as $test_set) {
+    echo '.';
+    $r = lhTextConv::bestMatch($test_set[0], $test_set[1], $percentage);
+    if ($r !== $test_set[2]) {
+        throw new Exception("Awaiting $test_set[2], got $r");
+    }
+    if (round($percentage, 3) != round($test_set[3], 3)) {
+        throw new Exception("Awaiting percentage to be $test_set[3], got $percentage");
+    }
+}
+echo "Ok\n";
+
+echo "Проверка split";
+
+$splits = [
+    ["О сколько нам открытий чудных готовит просвещенья дух. И опыт - сын ошибок трудных, и гений - парадоксов друг, и случай - бог изобретатель", [
+        "О", "сколько", "нам", "открытий", "чудных", "готовит", "просвещенья", "дух", ".", "И", "опыт",
+        "-", "сын", "ошибок", "трудных", ",", "и", "гений", "-", "парадоксов", "друг", ",", "и", "случай",
+        "-", "бог", "изобретатель"
+    ]],
+    ["Привет, Петь, у нас сломался принтер.",["Привет", ",", "Петь", ",", "у", "нас", "сломался", "принтер", "."]]
+];
+foreach ($splits as $test_set) {
+    echo '.';
+    $r = lhTextConv::split($test_set[0]);
+    if ((count($test_set[1]) == 0) && (count($r) != 0)) {
+        throw new Exception("Awaiting result to be empty but got: ". print_r($r, true));
+    }
+    for ($index = 0; $index < count($test_set[1]); $index++) {
+        if ($test_set[1][$index] != $r[$index]) {
+            throw new Exception("Awaiting lexemme $index to be ". $test_set[1][$index]. " but got: ". print_r($r[$index], true));
+        }
+    }
 }
 echo "Ok\n";

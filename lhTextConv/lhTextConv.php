@@ -78,12 +78,48 @@ class lhTextConv {
     }
     
     public static function similarity($text1, $text2) {
-        similar_text(
-            self::translit($text1), 
-            self::translit($text2), 
-            $percentage
-        );
-        return $percentage;
+        $translit1 = self::translit($text1);
+        $translit2 = self::translit($text2);
+        similar_text($translit1, $translit2, $percentage1);
+        similar_text($translit2, $translit1, $percentage2);
+        return min($percentage1, $percentage2);
+    }
+    
+    // Find First Lexemme - Ищет часть строки с начала наиболее похожую на переданную 
+    // и возвращает уровень похожести по метафону
+    // в $parts возвращает массив [
+    //      [0] => Найденная начальная часть строки
+    //      [1] => Остаток строки
+    // ], 
+    // $threshold задает минимальную похожесть. По умолчанию - точное соотвествие по метафону
+    public static function ffLex($string, $lexemme, &$parts, $threshold, $len=null) {
+        $lex_len = mb_strlen($lexemme);
+        $compare;
+    }
+
+    // Разбивает строку на лексеммы
+    public static function split($string) {
+        if (preg_match_all("/([.!?]|[,;]+|[а-яА-Я]+|\d+|[a-zA-Z]+|\S+)/u", $string, $matches) !== false) {
+            return $matches[0];
+        }
+        return false;
+    }
+
+    // Возвращает индекс элемента, наиболее похожего на $text
+    public static function bestMatch($array, $text, &$percentage) {
+        $similarity = -1;
+        $index = null;
+        foreach ($array as $key=>$elem) {
+            $current = self::metaphoneSimilarity($elem, $text);
+            if ($current > $similarity) {
+                $similarity = $current;
+                $index = $key;
+            }
+        }
+        if ($index !== null) {
+            $percentage = $similarity;
+        }
+        return $index;
     }
     
     public static function genderSubstitutions($string, $gender='m') {
