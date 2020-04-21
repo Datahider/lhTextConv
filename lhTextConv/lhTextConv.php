@@ -99,7 +99,7 @@ class lhTextConv {
 
     // Разбивает строку на лексеммы
     public static function split($string) {
-        if (preg_match_all("/([.!?]|[,;]+|[а-яА-Я]+|\d+|[a-zA-Z]+|\S+)/u", $string, $matches) !== false) {
+        if (preg_match_all("/([.!?]+|[-:]|[,;]|[а-яА-Я]+|\d+|[a-zA-Z]+|\S+)/u", $string, $matches) !== false) {
             return $matches[0];
         }
         return false;
