@@ -114,6 +114,9 @@ class lhTextConv {
 
     // Возвращает индекс элемента, наиболее похожего на $text
     public static function bestMatch($array, $text, &$percentage) {
+        if (count($array) == 0) {
+            throw new Exception("Array must contain at least one element", -10003);
+        }
         $similarity = -1;
         $index = null;
         foreach ($array as $key=>$elem) {
