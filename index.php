@@ -22,7 +22,6 @@ $best_match = [
     [["Похожест", "Похожесть", "Похожесть "], "Пахожесть", 0, 100],
     [["Доброго", "Доброго времени", "Доброго времени суток"], "Доброго времени дня", 1, 88.235294117647],
     [["Не", "Нет"], "Ни", 0, 100],
-    [[], "Любая фигня", null, 100], // Процент остается с прошлого вызова, т.к. в таком случае мы его не трогаем
     [[''], "Любая фигня", 0, 0],
 ];
 $commutatives = [
@@ -127,6 +126,14 @@ foreach ($best_match as $test_set) {
     }
     if (round($percentage, 3) != round($test_set[3], 3)) {
         throw new Exception("Awaiting percentage to be $test_set[3], got $percentage");
+    }
+}
+try {
+    $r = lhTextConv::bestMatch([], "Любая фигня", $percentage);
+    throw new Exception("Ожидалось возникновение исключения, но оно не возникло", -907);
+} catch (Exception $ex) {
+    if ($ex->getCode() == -907) {
+        throw $ex;
     }
 }
 echo "Ok\n";
